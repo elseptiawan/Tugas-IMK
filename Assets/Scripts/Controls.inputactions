@@ -24,13 +24,31 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Jump",
-                    "type": "Value",
-                    "id": "0f26c5fb-945e-47c5-92b1-3ed0b787db42",
-                    "expectedControlType": "Vector2",
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "f3878ac2-225a-45b0-9767-7912752ea429",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "c5176272-361c-43bb-a630-c774aaea2003",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "41ca454d-28c4-4502-8a5a-4bd205005c5d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -123,59 +141,70 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "c7932e5a-3026-41bb-b01a-13de14db75cb",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "6b0c1f8d-f3a3-4d49-b6fa-43fbb638b525",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
-                    "isComposite": true,
+                    "action": "Run",
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "42ca833e-ab1e-457e-9b79-aeb22955baf3",
+                    "name": "",
+                    "id": "dcb5a760-c3ff-4c8e-b64d-143e7bda2f00",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b1094b56-83f5-4167-bebb-42f5a3d012a7",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "down",
-                    "id": "61abbd61-4dc0-4df6-9a0a-f563db3fa8f3",
-                    "path": "",
+                    "name": "",
+                    "id": "28aa43de-e7cc-45d1-8376-9f88cc119125",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "left",
-                    "id": "39353a9e-3b5d-4288-b21b-46dddd72e73c",
-                    "path": "",
+                    "name": "",
+                    "id": "52f804ef-f4a3-488f-a49e-ce2d75709da5",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
+                    "action": "Pause",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "right",
-                    "id": "986f51f9-43e2-4a26-86a9-20c350a34e32",
-                    "path": "",
+                    "name": "",
+                    "id": "a38b32a6-3285-4481-9a6a-8643033b48ab",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
+                    "action": "Pause",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }

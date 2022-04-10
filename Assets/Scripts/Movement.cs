@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] private int speed = 10;
-    [SerializeField] private bool usePhysics = true;
+    private float speed;
+    [SerializeField] private float baseSpeed = 10f;
+    [SerializeField] private float boostSpeed = 1.5f;
+
+    [SerializeField] private CinemachineImpulseSource _impulseSource;
 
     private Camera _mainCamera;
     private Rigidbody _rb;
@@ -14,9 +18,11 @@ public class Movement : MonoBehaviour
     private Animator _animator;
     private static readonly int IsWalking = Animator.StringToHash("isWalking");
     private static readonly int IsRunning = Animator.StringToHash("isRunning");
+    private static readonly int IsJumping = Animator.StringToHash("isJumping");
 
     private void Awake()
     {
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
         _controls = new Controls();
     }
 
@@ -34,6 +40,7 @@ public class Movement : MonoBehaviour
 
     private void Start()
     {
+        speed = baseSpeed;
         _mainCamera = Camera.main;
         _rb = gameObject.GetComponent<Rigidbody>();
         _animator = gameObject.GetComponentInChildren<Animator>();
@@ -41,65 +48,41 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        if (usePhysics)
-        {
-            return;
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            _animator.SetBool(IsRunning, true);
-            Vector2 input = _controls.Player.Move.ReadValue<Vector2>();
-            Vector3 target = HandleInput(input);
-            Move(target);
-        }
-        else
-        {
-            _animator.SetBool(IsRunning, false);
-        }
-
-        if (_controls.Player.Move.IsPressed())
-        {
-            _animator.SetBool(IsWalking, true);
-            Vector2 input = _controls.Player.Move.ReadValue<Vector2>();
-            Vector3 target = HandleInput(input);
-            Move(target);
-        }
-        else
-        {
-            _animator.SetBool(IsWalking, false);
-        }
+        if (!_controls.Player.Move.IsPressed()) return;
+        Vector2 input = _controls.Player.Move.ReadValue<Vector2>();
+        Vector3 target = HandleInput(input);
+        RotateCharacter(target);
     }
+
 
     private void FixedUpdate()
     {
-        if (!usePhysics)
+        if (_controls.Player.Jump.IsPressed())
         {
-            return;
+            if (!_animator.GetBool(IsJumping))
+            {
+                _animator.SetBool(IsJumping, true);
+            }
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        else
+        {
+            _animator.SetBool(IsJumping, false);
+        }
+
+        if (_controls.Player.Run.IsPressed())
         {
             _animator.SetBool(IsRunning, true);
-            Vector2 input = _controls.Player.Move.ReadValue<Vector2>();
-            Vector3 target = HandleInput(input);
-            Move(target);
+            _impulseSource.GenerateImpulse();
+            speed = baseSpeed * boostSpeed;
         }
         else
         {
             _animator.SetBool(IsRunning, false);
+            speed = baseSpeed;
         }
-
         if (_controls.Player.Move.IsPressed())
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                _animator.SetBool(IsRunning, true);
-            }
-            else
-            {
-                _animator.SetBool(IsRunning, false);
-            }
             _animator.SetBool(IsWalking, true);
             Vector2 input = _controls.Player.Move.ReadValue<Vector2>();
             Vector3 target = HandleInput(input);
@@ -127,13 +110,27 @@ public class Movement : MonoBehaviour
         return transform.position + direction * speed * Time.deltaTime;
     }
 
-    private void Move(Vector3 target)
+    private void RotateCharacter(Vector3 target)
     {
-        transform.position = target;
+        transform.rotation = Quaternion.LookRotation(target-transform.position);
     }
 
     private void MovePhysics(Vector3 target)
     {
         _rb.MovePosition(target); 
     }
+
+    public void Jump()
+    {
+        _rb.AddForce(Vector3.up * 300);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            _animator.SetBool(IsJumping, false);
+        }
+    }
+
 }

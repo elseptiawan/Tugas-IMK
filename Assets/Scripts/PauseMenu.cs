@@ -1,27 +1,65 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    [SerializeField] GameObject pauseMenu;
+    [SerializeField] private GameObject pause;
+    [SerializeField] private Button pauseButton;
+    [SerializeField] private Button resumeButton;
+    [SerializeField] private Button exitButton;
 
-    public void Pause()
+    private Controls _controls;
+
+    private void Awake()
     {
-        pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
+        _controls = new Controls();
     }
 
-    public void Resume()
+    private void OnEnable()
     {
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
+        _controls.Enable();
+    }
+    
+    private void OnDisable()
+    {
+        _controls.Disable();
     }
 
-    public void Home(int sceneID)
+    private void Start()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(sceneID);
+        _controls.Player.Pause.performed += context => PauseGame(); 
+        pauseButton.onClick.AddListener(PauseGame);
+        resumeButton.onClick.AddListener(ResumeGame);
+        exitButton.onClick.AddListener(ExitGame);
+        Time.timeScale = 1;
+        pause.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        Time.timeScale = 1;
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        pause.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+    }
+    
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+        pause.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+    
+    public void ExitGame()
+    {
+        SceneManager.LoadScene("MenuScene");
     }
 }
